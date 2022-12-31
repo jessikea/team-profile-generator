@@ -10,7 +10,130 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+// Informing user of usage of generator
 
+console.log(
+    "\n This is the Team Generator!\nUse `npm run reset` to reset the dist/ folder\n "
+);
+
+function startApp(){
+
+    function buildTeam() {
+        if (!fs.existsSync(OUTPUT_DIR)) {
+          fs.mkdirSync(OUTPUT_DIR);
+        }
+        fs.writeFileSync(outputPath, render(teamMembers), 'utf-8');
+      }
+    
+      createManager();
+    }
+    function createManager(){
+        console.log("Time to build your team!");
+        inquirer
+            .prompt(
+                [
+                {
+                    type: 'input',
+                    name: 'managerName',
+                    message: "What is the team manager's name?",
+
+                     // to check if name is at least one character 
+                    validate: (answer) => {
+                        if (answer !== '') {
+                        return true;
+                      }
+                        return 'Please enter at least one character.';
+                    },
+                 },
+
+                { 
+                    type: "input",
+                    name: "managerId",
+                    message: "Provide Team Manager's ID",
+                    // to check if ID is valid with only number characters 
+
+                    validate: (answer) => {
+                        const accept = answer.match(/^[1-9]\d*$/)
+
+                        if (accept) {
+                            return true;
+                        }
+                        return "Please enter a valid ID number";
+                    },
+                },
+                { 
+                    type: 'input',
+                    name: 'managerEmail',
+                    message: "What is the team manager's email?",
+
+                    // to check if there is a valid email with an @ symbol
+                    validate: (answer) => {
+                    const accept = answer.match(/\S+@\S+\.\S+/);
+                        if (accept) {
+                            return true;
+                        }
+                         return 'Please enter a valid email address.';
+                    },
+                },
+
+                {
+                    type: 'input',
+                    name: 'managerOfficeNumber',
+                    message: "What is the team manager's office number?",
+                    // to check if the team manager's office number constains numbers
+                    validate: (answer) => {
+                    const accept = answer.match(/^[1-9]\d*$/);
+                        if (accept) {
+                            return true;
+                          }
+                          return 'Please enter a valid Office Number.';
+                    },
+                },
+
+                ])
+
+            .then((answers) => {
+                const manager = new Manager(
+                    answers.managerName,
+                    answers.managerId,
+                    answers.managerEmail,
+                    answers.managerOfficeNumber
+                );
+                    teamMembers.push(manager);
+                    idArray.push(answers.managerId);
+                    createTeam();
+                });
+    }
+
+    function createTeam() {
+        inquirer
+          .prompt([
+            {
+              type: 'list',
+              name: 'memberChoice',
+              message: 'Which type of team member would you like to add?',
+              choices: [
+                'Engineer',
+                'Intern',
+                "I don't want to add any more team members",
+              ],
+            },
+          ])
+          .then((userChoice) => {
+            switch (userChoice.memberChoice) {
+              case 'Engineer':
+                addEngineer(); // not added yet
+                break;
+              case 'Intern':
+                addIntern(); //not added yet
+                break;
+              default:
+                buildTeam();
+            }
+          });
+      }
+
+startApp()
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 

@@ -49,7 +49,7 @@ function startApp(){
                 { 
                     type: "input",
                     name: "managerId",
-                    message: "Provide Team Manager's ID",
+                    message: "Please provide Team Manager's ID",
                     // to check if ID is valid with only number characters 
 
                     validate: (answer) => {
@@ -104,7 +104,70 @@ function startApp(){
                     createTeam();
                 });
     }
-
+    function addEngineer(){
+        inquirer
+            .prompt(
+                [
+                {
+                    type: 'input',
+                    name: 'engineerName',
+                    message: "What is your engineer's name?",
+    
+                    // to check if name is at least one character 
+                    validate: (answer) => {
+                        if (answer !== '') {
+                        return true;
+                        }
+                        return 'Please enter at least one character.';
+                    },
+                },
+    
+                { 
+                    type: "input",
+                    name: "engineerId",
+                    message: "Please provide your engineer's ID",
+                    
+                    // to check if ID is valid with only number characters 
+    
+                    validate: (answer) => {
+                        const accept = answer.match(/^[1-9]\d*$/)
+    
+                        if (accept) {
+                         return true;
+                        }
+                         return "Please enter a valid ID number";
+                    },
+                    },
+                { 
+                    type: 'input',
+                    name: 'engineerEmail',
+                    message: "What is the engineer's email?",
+    
+                    // to check if there is a valid email with an @ symbol
+                    validate: (answer) => {
+                        const accept = answer.match(/\S+@\S+\.\S+/);
+                        
+                        if (accept) {
+                         return true;
+                        }
+                         return 'Please enter a valid email address.';
+                    },
+                },
+                {
+                    type: 'input',
+                    name: 'engineerGithub',
+                    message: "What is your engineer's GitHub username?",
+                    
+                    validate: (answer) => {
+                        if (answer !== '') {
+                         return true;
+                        }
+                         return 'Please enter at least one character.';
+                    },
+                },
+                
+                ])
+            }
     function createTeam() {
         inquirer
           .prompt([
